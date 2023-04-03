@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SearchBar  from '../components/SearchBar';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchMovieList } from '../../redux/Movie/movieActions';
+import { fetchMovie, fetchMovieList } from '../../redux/Movie/movieActions';
 import { RootState } from '../../store';
 import MovieList from '../components/MovieList';
 
@@ -29,6 +29,7 @@ export const Movie = () => {
 
     const searchKeyword = (keyword: string) => {
       dispatch(fetchMovieList(keyword));
+      // dispatch(fetchMovie("tt0338013"))
     }
 
     return (

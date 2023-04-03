@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchMovieList } from "./movieActions";
+import { fetchMovie, fetchMovieList } from "./movieActions";
 
 export interface InitialMovieState {
     movieList: IMovieSearchResult[]
-    movie: IMovieDetails[],
+    movie: IMovieDetails | null,
     favoriteMovies: IMovieSearchResult[]
 }
 
@@ -39,7 +39,7 @@ export interface IMovieDetails extends IMovie {
 
 const initialState: InitialMovieState = {
     movieList: [],
-    movie: [],
+    movie: null,
     favoriteMovies: []
 }
 
@@ -60,13 +60,34 @@ export const movieSlice = createSlice({
     extraReducers(builder) {
         builder.addCase(fetchMovieList.fulfilled, (state, action: any) => {
             const { Search } = action.payload.data;
-            console.log(action.payload.data);
             const movies: IMovieSearchResult[] = Search.map((movie: IMovieSearchResult) => {
                 const { Title, Year, imdbID, Type, Poster } = movie;
                 return { Title, Year, imdbID, Type, Poster }
             });
             state.movieList = movies;
-        })
+        });
+        builder.addCase(fetchMovie.fulfilled, (state, action: any) => {
+            const { data } = action.payload;
+            const movie = { 
+                Rated: data.Rated,
+                Released: data.Released,
+                Runtime: data.Runtime,
+                Genre: data.Genre,
+                Director: data.Director,
+                Writer: data.Writer,
+                Actors: data.Actors,
+                Plot: data.Plot,
+                Language: data.Language,
+                Country: data.Country,
+                Awards: data.Awards,
+                Ratings: data.Ratings,
+                Title: data.Title,
+                Year: data.Year,
+                Type: data.Type,
+                Poster: data.Poster
+            }
+            state.movie = movie;
+        });
     }
 });
 

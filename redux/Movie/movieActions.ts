@@ -11,3 +11,14 @@ export const fetchMovieList = createAsyncThunk(
         });
     }
 );
+
+export const fetchMovie = createAsyncThunk(
+    'movies/fetchMovie', 
+    async (imdbID: string) => {
+        return await axiosClient.get('', {
+            params: {
+                i: imdbID
+            }
+        });
+    }
+);
