@@ -7,7 +7,6 @@ export interface InitialMovieState {
     favoriteMovie: IMovie[]
 }
 
-
 interface IMovie {
     Title: string;
     Year: string;
@@ -15,7 +14,7 @@ interface IMovie {
     Poster: string;  
 }
 
-interface IMovieSearchResult extends IMovie {
+export interface IMovieSearchResult extends IMovie {
     imdbID: string;
 } 
 

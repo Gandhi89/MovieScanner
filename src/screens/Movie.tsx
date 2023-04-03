@@ -2,12 +2,15 @@ import React, { useLayoutEffect, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SearchBar  from '../components/SearchBar';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovies } from '../../redux/Movie/movieActions';
+import { RootState } from '../../store';
+import MovieList from '../components/MovieList';
 
 export const Movie = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
+    const movieList = useSelector((state: RootState) => state.movies.movieList);
     const navigateToMovieDetails = () => {
         navigation.navigate('movieDetails');
     };
@@ -27,9 +30,11 @@ export const Movie = () => {
     const searchKeyword = (keyword: string) => {
       dispatch(fetchMovies(keyword));
     }
+
     return (
         <View style={styles.root}>
             <SearchBar onSubmit={searchKeyword} />
+            <MovieList movies={movieList} />
         </View>
     );
 }
