@@ -1,10 +1,20 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Movie } from './src/screens/Movie';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { MovieDetails } from './src/screens/MovieDetails';
+import { Favourite } from './src/screens/Favourite';
+
+const Stack = createNativeStackNavigator();
 
 export const App = () => {
   return (
-    <View style={{flex: 1}}>
-      <Text>Hello world!</Text>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name={'movie'} component={Movie} options={{title: 'Movies'}}></Stack.Screen>
+        <Stack.Screen name={'movieDetails'} component={MovieDetails} options={{title: 'Movie Name'}}></Stack.Screen>
+        <Stack.Screen name={'favourite'} component={Favourite} options={{title: 'Favourites'}}></Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
