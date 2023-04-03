@@ -3,8 +3,8 @@ import { fetchMovies } from "./movieActions";
 
 export interface InitialMovieState {
     movieList: IMovieSearchResult[]
-    movie: IMovie[],
-    favoriteMovie: IMovie[]
+    movie: IMovieDetails[],
+    favoriteMovies: IMovieSearchResult[]
 }
 
 interface IMovie {
@@ -40,17 +40,21 @@ export interface IMovieDetails extends IMovie {
 const initialState: InitialMovieState = {
     movieList: [],
     movie: [],
-    favoriteMovie: []
+    favoriteMovies: []
 }
 
 export const movieSlice = createSlice({
     name: 'movie',
     initialState,
     reducers: {
-        addToFavoriteMovies: (state, action) => {
-            const favMovies = state.favoriteMovie;
-            favMovies.push(action.payload);
-            state.favoriteMovie = favMovies;
+        addRemoveFavoriteMovies: (state, action) => {
+            const favoriteMovies = state.favoriteMovies;
+            const movie: IMovieSearchResult = action.payload;
+            if (!!favoriteMovies.find(fav => fav.imdbID === movie.imdbID)) {
+                state.favoriteMovies = favoriteMovies.filter(fav => fav.imdbID !== movie.imdbID );
+            } else {
+                state.favoriteMovies = [...favoriteMovies, movie];
+            }
         }
     },
     extraReducers(builder) {
@@ -66,6 +70,6 @@ export const movieSlice = createSlice({
     }
 });
 
-export const {  addToFavoriteMovies } = movieSlice.actions;
+export const {  addRemoveFavoriteMovies } = movieSlice.actions;
 
 export default movieSlice.reducer;
