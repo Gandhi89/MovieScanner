@@ -23,9 +23,13 @@ export const Movie = () => {
         ),
       });
     }, [navigation]);
+
+    const searchKeyword = (keyword: string) => {
+      dispatch(fetchMovies(keyword));
+    }
     return (
         <View style={styles.root}>
-            <SearchBar onSubmit={() => {}} />
+            <SearchBar onSubmit={searchKeyword} />
         </View>
     );
 }

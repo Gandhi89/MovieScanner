@@ -3,15 +3,17 @@ import { TextInput, StyleSheet } from 'react-native';
 import { colors } from '../../utils/colors';
 
 type SearchBarProps = {
-  onSubmit(): void;
+  onSubmit(keyword: string): void;
 }
 
 const SearchBar = ({ onSubmit }: SearchBarProps) => {
   const [searchKeyword, setSearchKeyword] = useState('');
 
   const onSubmitEditing = () => {
-    setSearchKeyword('');
-    onSubmit();
+    if (searchKeyword !== '') {
+      onSubmit(searchKeyword);
+      setSearchKeyword('');
+    }
   }
 
   return (
