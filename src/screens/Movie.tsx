@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Button, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import SearchBar  from '../components/SearchBar';
 
 export const Movie = () => {
     const navigation = useNavigation();
@@ -20,8 +21,8 @@ export const Movie = () => {
         });
       }, [navigation]);
     return (
-        <View>
-            <Button onPress={navigateToMovieDetails} title={'Navigate to Movie details'}></Button>
+        <View style={styles.root}>
+            <SearchBar />
         </View>
     );
 }
@@ -29,5 +30,8 @@ export const Movie = () => {
 const styles = StyleSheet.create({
     headerButton: {
         marginRight: 15
+    },
+    root: {
+      flex: 1
     }
 })
