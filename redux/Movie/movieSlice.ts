@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchMovies } from "./movieActions";
+import { fetchMovieList } from "./movieActions";
 
 export interface InitialMovieState {
     movieList: IMovieSearchResult[]
@@ -58,7 +58,7 @@ export const movieSlice = createSlice({
         }
     },
     extraReducers(builder) {
-        builder.addCase(fetchMovies.fulfilled, (state, action: any) => {
+        builder.addCase(fetchMovieList.fulfilled, (state, action: any) => {
             const { Search } = action.payload.data;
             console.log(action.payload.data);
             const movies: IMovieSearchResult[] = Search.map((movie: IMovieSearchResult) => {
