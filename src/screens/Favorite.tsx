@@ -7,12 +7,12 @@ import Placeholder from '../components/Placeholder';
 
 const emptyPlaceholderMessag = "Keep track of all your favorite movies in one place - add them to your favorites list today!";
 
-export const Favourite = () => {
+export const Favorite = () => {
     const favorites = useSelector((state: RootState) => state.movies.favoriteMovies);
-    const showFavouritePlaceholder = favorites.length < 1;
+    const showFavoritePlaceholder = favorites.length < 1;
     return (
         <View style={styles.root}>
-            {showFavouritePlaceholder ?
+            {showFavoritePlaceholder ?
                 <Placeholder 
                     message={emptyPlaceholderMessag} 
                     showEmoji={false} 

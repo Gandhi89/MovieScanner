@@ -8,26 +8,17 @@ import { RootState } from '../../store';
 import { colors } from '../../utils/colors';
 import LoadingIndicator from '../components/LoadingIndicator';
 
-type MovieDetailParamList = {
-    MovieDetail: { movie: IMovieSearchResult };
-};
-  
-type MovieDetailScreenRouteProp = RouteProp<
-    MovieDetailParamList,
-    'MovieDetail'
->;
 
-type MovieDetailProps = {
-    route: MovieDetailScreenRouteProp;
-};
-
-export const MovieDetails = ({ route }: MovieDetailProps) => {
+export const MovieDetails = ({ route }) => {
     const { movie } = route.params;
     const navigation = useNavigation();
-    navigation.setOptions({ title: movie.Title });
     const dispatch = useDispatch();
     const movieInfo: (IMovieDetails | null) = useSelector((state: RootState) => state.movies.movie);
     const isMovieInfoLoading = useSelector((state: RootState) => state.movies.isMovieInfoLoading);
+
+    useEffect(() => {
+      navigation.setOptions({ title: movie.Title });
+    }, [navigation]);
 
     useEffect(() => {
         dispatch(fetchMovie(movie.imdbID));
