@@ -6,14 +6,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovie, fetchMovieList } from '../../redux/Movie/movieActions';
 import { RootState } from '../../store';
 import MovieList from '../components/MovieList';
+import MoviePlaceholder from '../components/MoviePlaceholder';
 
 export const Movie = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const movieList = useSelector((state: RootState) => state.movies.movieList);
-    const navigateToMovieDetails = () => {
-        navigation.navigate('movieDetails');
-    };
     const navigateToFavourites = () => {
         navigation.navigate('favourite');
     };
@@ -29,13 +27,17 @@ export const Movie = () => {
 
     const searchKeyword = (keyword: string) => {
       dispatch(fetchMovieList(keyword));
-      // dispatch(fetchMovie("tt0338013"))
     }
+
+    const showMoviePlaceholder = movieList?.length < 1;
 
     return (
         <View style={styles.root}>
             <SearchBar onSubmit={searchKeyword} />
-            <MovieList movies={movieList} />
+            { showMoviePlaceholder ? 
+                <MoviePlaceholder /> : 
+                <MovieList movies={movieList} />
+            }
         </View>
     );
 }
