@@ -2,9 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import { fetchMovie, fetchMovieList } from "./movieActions";
 
 export interface InitialMovieState {
-    movieList: IMovieSearchResult[]
+    movieList: IMovieSearchResult[],
     movie: IMovieDetails | null,
-    favoriteMovies: IMovieSearchResult[]
+    favoriteMovies: IMovieSearchResult[],
+    isListLoading: boolean,
+    isMovieInfoLoading: boolean
 }
 
 interface IMovie {
@@ -17,7 +19,6 @@ interface IMovie {
 export interface IMovieSearchResult extends IMovie {
     imdbID: string;
 } 
-
 
 export interface IMovieDetails extends IMovie {
     Rated: string,
@@ -40,7 +41,9 @@ export interface IMovieDetails extends IMovie {
 const initialState: InitialMovieState = {
     movieList: [],
     movie: null,
-    favoriteMovies: []
+    favoriteMovies: [],
+    isListLoading: false,
+    isMovieInfoLoading: false
 }
 
 export const movieSlice = createSlice({
@@ -65,6 +68,7 @@ export const movieSlice = createSlice({
                 return { Title, Year, imdbID, Type, Poster }
             });
             state.movieList = movies;
+            state.isListLoading = false;
         });
         builder.addCase(fetchMovie.fulfilled, (state, action: any) => {
             const { data } = action.payload;
@@ -87,6 +91,13 @@ export const movieSlice = createSlice({
                 Poster: data.Poster
             }
             state.movie = movie;
+            state.isMovieInfoLoading = false;
+        });
+        builder.addCase(fetchMovieList.pending, (state, _) => {
+            state.isListLoading = true;
+        });
+        builder.addCase(fetchMovie.pending, (state, _) => {
+            state.isMovieInfoLoading = true;
         });
     }
 });

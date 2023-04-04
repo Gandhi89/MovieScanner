@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovie } from '../../redux/Movie/movieActions';
 import { RootState } from '../../store';
 import { colors } from '../../utils/colors';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 type MovieDetailParamList = {
     MovieDetail: { movie: IMovieSearchResult };
@@ -26,13 +27,18 @@ export const MovieDetails = ({ route }: MovieDetailProps) => {
     navigation.setOptions({ title: movie.Title });
     const dispatch = useDispatch();
     const movieInfo: (IMovieDetails | null) = useSelector((state: RootState) => state.movies.movie);
+    const isMovieInfoLoading = useSelector((state: RootState) => state.movies.isMovieInfoLoading);
 
     useEffect(() => {
         dispatch(fetchMovie(movie.imdbID));
     }, [movie]);
 
-    if (!movieInfo) return null
-    const {Poster, Plot, Title, Released, Runtime, Genre, Director, Writer, Actors, Language, Country, Awards, Ratings } = movieInfo;
+    if (!movieInfo) return null;
+    if (isMovieInfoLoading) {
+      return <LoadingIndicator />;
+    };
+
+    const {Poster, Plot, Title, Released, Runtime, Genre, Director, Writer, Actors } = movieInfo;
     
     return (
         <ScrollView style={styles.container}>

@@ -12,7 +12,7 @@ export const Favourite = () => {
     const showFavouritePlaceholder = favorites.length < 1;
     return (
         <View style={styles.root}>
-            {showFavouritePlaceholder ? 
+            {showFavouritePlaceholder ?
                 <Placeholder 
                     message={emptyPlaceholderMessag} 
                     showEmoji={false} 
