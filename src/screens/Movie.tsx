@@ -6,7 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovie, fetchMovieList } from '../../redux/Movie/movieActions';
 import { RootState } from '../../store';
 import MovieList from '../components/MovieList';
-import MoviePlaceholder from '../components/MoviePlaceholder';
+import MoviePlaceholder from '../components/Placeholder';
+
+const emptyPlaceholderMessage = "Can't remember that movie that rhymed with 'Fright Club'? Search it here!";
 
 export const Movie = () => {
     const navigation = useNavigation();
@@ -35,7 +37,7 @@ export const Movie = () => {
         <View style={styles.root}>
             <SearchBar onSubmit={searchKeyword} />
             { showMoviePlaceholder ? 
-                <MoviePlaceholder /> : 
+                <MoviePlaceholder message={emptyPlaceholderMessage} /> : 
                 <MovieList movies={movieList} />
             }
         </View>
@@ -44,7 +46,7 @@ export const Movie = () => {
 
 const styles = StyleSheet.create({
     headerButton: {
-        marginRight: 15
+      marginRight: 15
     },
     root: {
       flex: 1
