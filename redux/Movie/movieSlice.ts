@@ -70,7 +70,7 @@ export const movieSlice = createSlice({
         builder.addCase(fetchMovieList.fulfilled, (state, action: any) => {
             const { Search, Error } = action.payload.data;
             if (Error) {
-                state.movieListError = Error;
+                state.movieListError = `Error: ${Error}`;
                 state.isListLoading = false;
                 return
             }
