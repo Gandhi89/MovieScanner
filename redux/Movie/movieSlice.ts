@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { fetchMovie, fetchMovieList } from "./movieActions";
 
 const requestFailError = "Oops, something went wrong!";
@@ -67,7 +67,7 @@ export const movieSlice = createSlice({
         }
     },
     extraReducers(builder) {
-        builder.addCase(fetchMovieList.fulfilled, (state, action: any) => {
+        builder.addCase(fetchMovieList.fulfilled, (state, action: PayloadAction<{ data: { Search: IMovieSearchResult[], Error: string | undefined } }>) => {
             const { Search, Error } = action.payload.data;
             if (Error) {
                 state.movieListError = `Error: ${Error}`;
@@ -80,9 +80,10 @@ export const movieSlice = createSlice({
             });
             state.movieList = movies;
             state.isListLoading = false;
+            state.movieListError = null;
         });
-        builder.addCase(fetchMovie.fulfilled, (state, action: any) => {
-            const { data } = action.payload;
+        builder.addCase(fetchMovie.fulfilled, (state, action: PayloadAction<IMovieDetails>) => {
+            const data = action.payload;
             const movie = { 
                 Rated: data.Rated,
                 Released: data.Released,
@@ -103,6 +104,7 @@ export const movieSlice = createSlice({
             }
             state.movie = movie;
             state.isMovieInfoLoading = false;
+            state.movieInfoError = null;
         });
         builder.addCase(fetchMovieList.pending, (state, _) => {
             state.isListLoading = true;
@@ -117,7 +119,7 @@ export const movieSlice = createSlice({
             state.movieListError = requestFailError;
         });
         builder.addCase(fetchMovie.rejected, (state, _) => {
-            state.isListLoading = false;
+            state.isMovieInfoLoading = false;
             state.movieInfoError = requestFailError;
         });
     }
