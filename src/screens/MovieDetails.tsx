@@ -7,6 +7,7 @@ import { fetchMovie } from '../../redux/Movie/movieActions';
 import { RootState } from '../../store';
 import { colors } from '../../utils/colors';
 import LoadingIndicator from '../components/LoadingIndicator';
+import Placeholder from '../components/Placeholder';
 
 
 export const MovieDetails = ({ route }) => {
@@ -15,6 +16,7 @@ export const MovieDetails = ({ route }) => {
     const dispatch = useDispatch();
     const movieInfo: (IMovieDetails | null) = useSelector((state: RootState) => state.movies.movie);
     const isMovieInfoLoading = useSelector((state: RootState) => state.movies.isMovieInfoLoading);
+    const movieInfoError = useSelector((state: RootState) => state.movies.movieInfoError);
 
     useEffect(() => {
       navigation.setOptions({ title: movie.Title });
@@ -28,6 +30,9 @@ export const MovieDetails = ({ route }) => {
     if (isMovieInfoLoading) {
       return <LoadingIndicator />;
     };
+    if (typeof movieInfoError === 'string') {
+      return <Placeholder message={movieInfoError} showEmoji={false} style={styles.placeholder} />
+    }
 
     const {Poster, Plot, Title, Released, Runtime, Genre, Director, Writer, Actors } = movieInfo;
     
@@ -98,4 +103,8 @@ const styles = StyleSheet.create({
     plot: {
       marginVertical: 20,
     },
-  });
+    placeholder: {
+      alignItems: 'center', 
+      justifyContent: 'center',
+    }
+});

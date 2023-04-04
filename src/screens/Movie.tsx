@@ -6,8 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovie, fetchMovieList } from '../../redux/Movie/movieActions';
 import { RootState } from '../../store';
 import MovieList from '../components/MovieList';
-import MoviePlaceholder from '../components/Placeholder';
+import Placeholder from '../components/Placeholder';
 import LoadingIndicator from '../components/LoadingIndicator';
+import Alert from '../components/ErrorModal';
 
 const emptyPlaceholderMessage = "Can't remember that movie that rhymed with 'Fright Club'? Search it here!";
 
@@ -17,26 +18,40 @@ export const Movie = () => {
     const dispatch = useDispatch();
     const movieList = useSelector((state: RootState) => state.movies.movieList);
     const isMovieListLoading = useSelector((state: RootState) => state.movies.isListLoading);
-    const navigateToFavourites = () => {
-        navigation.navigate('favourite');
+    const movieListError = useSelector((state: RootState) => state.movies.movieListError);
+    const navigateToFavorites = () => {
+        navigation.navigate('favorite');
     };
+
+    const [placeholderMessage, setPlaceholderMessage] = useState("");
+    const [showPlaceholder, setShowPlaceholder] = useState(false);
+    const [showEmoji, setShowEmoji] = useState(false);
 
     useLayoutEffect(() => {
       navigation.setOptions({
         headerRight: () => (
-          <TouchableOpacity onPress={navigateToFavourites}>
-            <Text style={styles.headerButton}>Favourites</Text>
+          <TouchableOpacity onPress={navigateToFavorites}>
+            <Text style={styles.headerButton}>Favorites</Text>
           </TouchableOpacity>
         ),
       });
     }, [navigation]);
 
+    useEffect(() => {
+      const hasError = typeof movieListError === 'string';
+      const shouldShowPlaceholder = hasError || movieList?.length < 1;
+      if (shouldShowPlaceholder) {
+        const message = hasError ? movieListError : emptyPlaceholderMessage;
+        setPlaceholderMessage(message);
+        setShowEmoji(hasError ? false : true);
+      };
+      setShowPlaceholder(shouldShowPlaceholder);
+    }, [movieList, movieListError]);
+
     const searchKeyword = (keyword: string) => {
       dispatch(fetchMovieList(keyword));
     }
-
-    const showMoviePlaceholder = movieList?.length < 1;
-
+    
     if (isMovieListLoading) {
       return <LoadingIndicator />;
     }
@@ -44,8 +59,8 @@ export const Movie = () => {
     return (
         <View style={styles.root}>
             <SearchBar onSubmit={searchKeyword} />
-            { showMoviePlaceholder ? 
-                <MoviePlaceholder message={emptyPlaceholderMessage} /> : 
+            { showPlaceholder ? 
+                <Placeholder message={placeholderMessage} showEmoji={showEmoji} /> : 
                 <MovieList movies={movieList} />
             }
         </View>

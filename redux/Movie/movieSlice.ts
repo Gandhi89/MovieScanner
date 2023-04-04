@@ -1,12 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchMovie, fetchMovieList } from "./movieActions";
 
+const requestFailError = "Oops, something went wrong!";
+
 export interface InitialMovieState {
     movieList: IMovieSearchResult[],
     movie: IMovieDetails | null,
     favoriteMovies: IMovieSearchResult[],
     isListLoading: boolean,
-    isMovieInfoLoading: boolean
+    isMovieInfoLoading: boolean,
+    movieListError: string | null,
+    movieInfoError: string | null,
 }
 
 interface IMovie {
@@ -43,7 +47,9 @@ const initialState: InitialMovieState = {
     movie: null,
     favoriteMovies: [],
     isListLoading: false,
-    isMovieInfoLoading: false
+    isMovieInfoLoading: false,
+    movieListError: null,
+    movieInfoError: null
 }
 
 export const movieSlice = createSlice({
@@ -62,8 +68,13 @@ export const movieSlice = createSlice({
     },
     extraReducers(builder) {
         builder.addCase(fetchMovieList.fulfilled, (state, action: any) => {
-            const { Search } = action.payload.data;
-            const movies: IMovieSearchResult[] = Search.map((movie: IMovieSearchResult) => {
+            const { Search, Error } = action.payload.data;
+            if (Error) {
+                state.movieListError = Error;
+                state.isListLoading = false;
+                return
+            }
+            const movies: IMovieSearchResult[] = Search?.map((movie: IMovieSearchResult) => {
                 const { Title, Year, imdbID, Type, Poster } = movie;
                 return { Title, Year, imdbID, Type, Poster }
             });
@@ -95,9 +106,19 @@ export const movieSlice = createSlice({
         });
         builder.addCase(fetchMovieList.pending, (state, _) => {
             state.isListLoading = true;
+            state.movieListError = null;
         });
         builder.addCase(fetchMovie.pending, (state, _) => {
             state.isMovieInfoLoading = true;
+            state.movieInfoError = null;
+        });
+        builder.addCase(fetchMovieList.rejected, (state, _) => {
+            state.isListLoading = false;
+            state.movieListError = requestFailError;
+        });
+        builder.addCase(fetchMovie.rejected, (state, _) => {
+            state.isListLoading = false;
+            state.movieInfoError = requestFailError;
         });
     }
 });
